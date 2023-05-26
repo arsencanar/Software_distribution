@@ -1,1 +1,97 @@
+import turtle
 
+# Создаем окно
+window = turtle.Screen()
+window.title("Пинг-Понг")
+window.bgcolor("#003366")
+window.setup(width=500, height=700)
+
+# Создаем левую раекту
+racket_left = turtle.Turtle()
+racket_left.speed(0)
+racket_left.shape("square")
+racket_left.color("white")
+racket_left.shapesize(stretch_wid=5, stretch_len=1)
+racket_left.penup()
+racket_left.goto(-225, 0)
+
+# Создаем правую ракету
+racket_right = turtle.Turtle()
+racket_right.speed(0)
+racket_right.shape("square")
+racket_right.color("white")
+racket_right.shapesize(stretch_wid=5, stretch_len=1)
+racket_right.penup()
+racket_right.goto(225, 0)
+
+# Создаем мяч
+ball = turtle.Turtle()
+ball.speed(40)
+ball.shape("circle")
+ball.color("#00FF00")  
+ball.penup()
+ball.goto(0, 0)
+ball.dx = 3
+ball.dy = -3
+
+# Функция движения левой ракетки вверх
+def racket_left_up():
+    y = racket_left.ycor()
+    y += 20
+    racket_left.sety(y)
+
+# Функция движения левой ракетки вниз
+def racket_left_down():
+    y = racket_left.ycor()
+    y -= 20
+    racket_left.sety(y)
+
+# Функция движения правой ракетки вверх
+def racket_right_up():
+    y = racket_right.ycor()
+    y += 20
+    racket_right.sety(y)
+
+# Функция движения правой ракетки вниз
+def racket_right_down():
+    y = racket_right.ycor()
+    y -= 20
+    racket_right.sety(y)
+
+# Привязывааем клавиши к функциям движения ракеток
+window.listen()
+window.onkeypress(racket_left_up, "w")
+window.onkeypress(racket_left_down, "s")
+window.onkeypress(racket_right_up, "Up")
+window.onkeypress(racket_right_down, "Down")
+
+# Главный цикл игры
+while True:
+    window.update()
+
+    # Движение мяча
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    # Отскок мяча от верхней и нижней стен
+    if ball.ycor() > 340 or ball.ycor() < -340:
+        ball.dy *= -1
+
+    # Проверка на столкновение мяча с ракетками
+    if (ball.xcor() > 220 and ball.xcor() < 225) and (ball.ycor() < racket_right.ycor() + 40 and ball.ycor() > racket_right.ycor() - 40):
+        ball.dx *= -1
+
+    if (ball.xcor() < -220 and ball.xcor() > -225) and (ball.ycor() < racket_left.ycor() + 40 and ball.ycor() > racket_left.ycor() - 40):
+        ball.dx *= -1
+
+    # Проверяем, проиграл ли кто-то
+    if ball.xcor() > 250:
+        ball.goto(0, 0)
+        ball.dx *= -1
+
+    if ball.xcor() < -250:
+        ball.goto(0, 0)
+        ball.dx *= -1
+
+# Запускаем игру
+turtle.mainloop()
